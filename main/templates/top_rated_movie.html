@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if tops %}
+    {% for review in tops %}
+
+          <div class="post" enctype="multipart/form-data">
+            <!-- post-inner -->
+            <div class="post-inner">
+              <header>
+                <h2><a href="{% url 'review_detail' review.id review.slug %}">{{ review.name }}</a></h2>
+                <p class="tags">Number of comment<a href="#">{{ review.comments.count }}</a></p>
+                <div class="cl">&nbsp;</div>
+              </header>
+
+              <div class="img-holder"> <a href="#"><img src="{{ review.image_field.url }}" width="200" alt=""></a> <a href="{{ review.image_field.url }}" class="btn-full-image popup"><span>FULL IMAGE</span></a> </div>
+              <!-- meta -->
+              <div class="meta">
+                <p class="date">{{ review.pub_date}} by <a href="#">{{ review.review_user }}</a></p>
+                <div class="right">
+
+                  <a href="{% url 'add_review' review.id %}" class="comments">Rate this movie</a> </div>
+                <div class="cl">&nbsp;</div>
+              </div>
+              <!-- end of meta -->
+              <!-- post-cnt -->
+              <div class="post-cnt">
+                <p>{{ review.information }}</p>
+ 
+              <!-- end of post-cnt -->
+        {% endfor %}
+            </div>
+            <!-- post-inner -->
+          </div>
+      {% else %}
+  <p>No reviews are available.</p>
+{% endif %}
+{% endblock %}

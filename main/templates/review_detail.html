@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="w-50 card">
+    <section class="content">
+          <div class="post" enctype="multipart/form-data">
+            <!-- post-inner -->
+            <div class="post-inner">
+              <header>
+                <h2><a href="{% url 'review_detail' review.id review.slug %}">{{ review.name }}</a></h2>
+                <p class="tags"><a href="#">{{ review.genres }}</a></p>
+                <div class="cl">&nbsp;</div>
+              </header>
+              <div class="img-holder"> <a href="#"><img src="{{ review.image_field.url }}"  width="200" alt=""></a></div>
+              <!-- meta -->
+              <div class="meta">
+                <p class="date">{{ review.pub_date}} by <a href="#">{{ review.review_user }}</a></p>
+              </div>
+                <div class="right">
+                    <div class="rating-holder">
+                    <p>RATING</p>
+                      {% with ''|center:c as range %}
+                      
+                      {% for i in total_rating %}
+
+                      {% if forloop.counter <= c %}
+                      <span class="fa fa-star checked"></span>
+                      {% else %}
+                      <span class="fa fa-star"></span>
+                      {% endif %}
+                      {% endfor %}
+                      {% endwith %}
+                      </div>
+                  {% if user.is_authenticated %}
+                  <a href="{% url 'add_review' review.id %}" class="comments">Rate this movie</a> 
+                  {% else %}
+                  <a href="{% url 'login' %}" class="comments">Please login for Comment</a>
+                  {% endif %}
+                  </div>
+                <div class="cl">&nbsp;</div>
+
+              <!-- end of meta -->
+              <!-- post-cnt -->
+              <div class="post-cnt">
+                <p>{{ review.information }}</p>
+        <p>  <b>Cast :  </b>{{ review.cast }}</p>
+
+
+    {% for com in posts %}
+    <div class="comment">
+      <strong>{{ com.review_user }}</strong>
+      <div class="rating-holder">
+          {% with ''|center:com.rating as range %}
+          
+          {% for i in total_rating %}
+
+          {% if forloop.counter <= com.rating %}
+          <span class="fa fa-star checked"></span>
+          {% else %}
+          <span class="fa fa-star"></span>
+          {% endif %}
+          {% endfor %}
+          {% endwith %}
+          </div>
+          <strong>{{ com.pub_date }}</strong>
+          <p>{{ com.comment|linebreaks }}</p>
+    </div>
+    {% empty %}
+          <p>No comments here yet :(</p>
+    {% endfor %}
+
+
+
+    <div class="pagination">
+      <ul>
+          {% if posts.has_previous %}
+              <li><a href="?page={{ posts.previous_page_number }}">Previous</a></li>
+          {% endif %}
+          {% for pg in posts.paginator.page_range %}
+              {% if posts.number == pg %}
+                  <li class="active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+              {% else %}
+                  <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+              {% endif %}
+          {% endfor %}
+          {% if posts.has_next %}
+              <li><a href="?page={{ posts.next_page_number }}">Next</a></li>
+          {% endif %}
+      </ul>
+    </div>
+</section>
+</div>
+
+{% endblock %}
